@@ -1,6 +1,6 @@
-IRPF90 = irpf90  #-a -d
-FC     = gfortran
-FCFLAGS= -O2
+IRPF90 = irpf90  -a -d
+FC     = ifort
+FCFLAGS= -O2 -traceback
 
 SRC=
 OBJ=

@@ -1,0 +1,30 @@
+ BEGIN_PROVIDER [double precision, natoms]
+     BEGIN_DOC
+ ! Read the coordinates of atoms and masses
+     END_DOC
+     implicit none
+     integer i
+     print *, 'number of atoms?'
+     read(*,*)natoms
+     print *, 'for each atom'
+     do i=1,natoms
+        do j=1,natoms
+        read(*,*)coords(:,i),mass(i)
+        read(*,*)coords(:,j),mass(j)
+        print *, dist
+     enddo
+ END_PROVIDER
+
+ BEGIN_PROVIDER [double precision, dist]
+    BEGIN_DOC
+! Calculate distance between two atoms
+    END_DOC
+    implicit none
+    integer i,j
+    double precision e_ij(3)
+            e_ij(1)=coords(1,j)-coords(1,i)
+            e_ij(2)=coords(2,j)-coords(2,i)
+            e_ij(3)=coords(3,j)-coords(3,i)
+            dist=SQRT(e_ij(1)**2+e_ij(2)**2+e_ij(3)**2)
+END_PROVIDER
+
