@@ -46,3 +46,58 @@ BEGIN_PROVIDER [double precision, interratomic_distance]
     read(*,*)interratomic_distance
     ASSERT (interratomic_distance > 0.)
 END_PROVIDER
+
+BEGIN_PROVIDER [double precision, acceleration, (3,natoms)]
+    implicit none
+    BEGIN_DOC
+! Calculate accelaration = -grad(V)/m
+    END_DOC
+    integer :: i,k
+    do i=1,natoms
+        do k=1,3
+            acceleration(k,i)=-V_grad(k,i)/mass(i)
+        enddo
+    enddo
+END_PROVIDER
+
+BEGIN_PROVIDER [double precision, V_grad, (3,natoms)]
+    implicit none
+    BEGIN_DOC
+! Calculate gradiant
+    END_DOC
+    integer :: i,k
+    do i=1,natoms
+        do k=1,3
+            V_grad(k,i)= V_grad_numeric(k,i)
+        enddo
+    enddo
+END_PROVIDER
+
+BEGIN_PROVIDER [double precision, V_grad_numeric, (3,natoms)]
+    implicit none
+    BEGIN_DOC
+! Calculate numeric gradient of potential
+    END_DOC
+    integer :: i,k
+    do i=1,natoms
+        do k=1,3
+            coord(k,i)+=dstep
+            TOUCH coord
+            V_grad_numeric(k,i)=V
+            coord(k,i)-=2.d0*dstep
+            TOUCH coord
+            V_grad_numeric(k,i)-=V
+            V_grad_numeric(k,i)*=.5d0/dstep
+            coord(k,i)+=dstep
+        enddo
+    enddo
+    SOFT_TOUCH coord
+END_PROVIDER
+
+BEGIN_PROVIDER [double precision, dstep]
+    implicit none
+    BEGIN_DOC
+! Finite difference step
+    END_DOC
+    dstep=1.d-4
+END_PROVIDER
