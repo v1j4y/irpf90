@@ -7,7 +7,7 @@ ifneq ($(HAS_CYTHON),0)
 	rm ../bin/irpf90 ; cd ../bin ; ln -s ../src/irpf90.exe irpf90
 
 irpf90.exe: irpf90.so
-	gcc build/*/irpf90.o -L/usr/lib64 -lpython$(PYVERSION) -o irpf90.exe
+	gcc build/*/irpf90.o -L/usr/lib/python2.7 -lpython$(PYVERSION) -o irpf90.exe
 
 irpf90.so : $(wildcard *.py) irpf90.c
 	./cython_setup.py build_ext --inplace
