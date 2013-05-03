@@ -1,4 +1,4 @@
-IRPF90 = irpf90  -a -d
+IRPF90 = irpf90 # -a -d
 FC     = ifort
 FCFLAGS= -O2 -traceback
 
