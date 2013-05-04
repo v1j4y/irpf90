@@ -1,0 +1,37 @@
+program get_doc
+    integer :: iargc
+    character*(32) :: arg
+    integer :: i,j
+
+    if(iargc()==0)then
+        print *,'Liste des entites IRP'
+        do j=1,size(entities)
+            print *,entities(j)
+        enddo
+        return
+    endif
+
+    do i=1,iargc()
+        call getarg(i,arg)
+
+BEGIN_SHELL [/usr/bin/python2.7]
+import os
+entities = []
+for filename in os.listdir('.'):
+    if filename.endswith('.irp.f'):
+        file=open(filename,'r')
+        for line in file:
+            if line.strip().lower().startswith('begin_provider'):
+                name=line.split(',')[1].split(']')[0].strip()
+                entities.append(name)
+        file.close()
+
+for e in entities:
+    print "  if (arg == '%s') then"%(e,)
+    print "    print *, %s doc"%(e,)
+    print "  endif"
+END_SHELL
+
+    enddo
+end
+
